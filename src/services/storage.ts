@@ -110,84 +110,7 @@ export function rowToIdeaItem(row: any): IdeaItem {
   };
 }
 
-// SUPABASE CRUD OPERATIONS
-export const subscribeToIdeas = (userId: string, callback: (ideas: IdeaItem[]) => void) => {
-  const fetchIdeas = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('ideas')
-        .select('*')
-        .eq('user_id', userId)
-        .order('updated_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching ideas from Supabase:', error);
-        return;
-      }
-      if (data) {
-        callback(data.map(rowToIdeaItem));
-      }
-    } catch (err) {
-      console.error('Failed to query ideas from Supabase:', err);
-    }
-  };
-
-  // Initial load
-  fetchIdeas();
-
-  // Supabase Realtime channel subscription
-  const channel = supabase
-    .channel(`ideas_realtime_${userId}_${Math.random().toString(36).substring(2, 9)}`)
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'ideas',
-        filter: `user_id=eq.${userId}`,
-      },
-      () => {
-        fetchIdeas();
-      }
-    )
-    .subscribe();
-
-  return () => {
-    supabase.removeChannel(channel);
-  };
-};
-
-export const saveIdeaToSupabase = async (userId: string, idea: IdeaItem) => {
-  const row = ideaItemToRow(userId, idea);
-  const { data, error } = await supabase
-    .from('ideas')
-    .upsert(row, { onConflict: 'id' });
-
-  if (error) {
-    console.error('Supabase save error:', error);
-    throw error;
-  }
-  return data;
-};
-
-export const deleteIdeaFromSupabase = async (userId: string, ideaId: string) => {
-  const { error } = await supabase
-    .from('ideas')
-    .delete()
-    .eq('id', ideaId)
-    .eq('user_id', userId);
-
-  if (error) {
-    console.error('Supabase delete error:', error);
-    throw error;
-  }
-};
-
-// Aliases for backwards compatibility
-export const saveIdeaToFirebase = saveIdeaToSupabase;
-export const deleteIdeaFromFirebase = deleteIdeaFromSupabase;
-
-// LOCAL STORAGE FALLBACKS (Migration support)
+// LOCAL STORAGE CACHE HELPERS
 export const getStoredIdeas = (): IdeaItem[] => {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return [];
@@ -198,9 +121,143 @@ export const getStoredIdeas = (): IdeaItem[] => {
   }
 };
 
+const saveLocalIdea = (idea: IdeaItem) => {
+  try {
+    const list = getStoredIdeas();
+    const index = list.findIndex(i => i.id === idea.id);
+    if (index >= 0) {
+      list[index] = idea;
+    } else {
+      list.unshift(idea);
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  } catch (e) {
+    console.warn('LocalStorage save warning:', e);
+  }
+};
+
+const deleteLocalIdea = (ideaId: string) => {
+  try {
+    const list = getStoredIdeas().filter(i => i.id !== ideaId);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  } catch (e) {
+    console.warn('LocalStorage delete warning:', e);
+  }
+};
+
 export const clearLocalStorage = () => {
   localStorage.removeItem(STORAGE_KEY);
 };
+
+// SUPABASE CRUD OPERATIONS WITH LOCAL FALLBACK
+export const subscribeToIdeas = (userId: string, callback: (ideas: IdeaItem[]) => void) => {
+  // 1. Immediately emit cached ideas for instant responsiveness
+  const cached = getStoredIdeas();
+  if (cached.length > 0) {
+    callback(cached);
+  }
+
+  const fetchIdeas = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('ideas')
+        .select('*')
+        .eq('user_id', userId)
+        .order('updated_at', { ascending: false });
+
+      if (error) {
+        // If table doesn't exist yet or any connection notice, use cached
+        console.warn('Supabase fetch ideas info:', error.message);
+        callback(getStoredIdeas());
+        return;
+      }
+      if (data && data.length > 0) {
+        const ideas = data.map(rowToIdeaItem);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(ideas));
+        callback(ideas);
+      } else if (cached.length > 0) {
+        // Sync cached ideas to Supabase in the background
+        for (const item of cached) {
+          supabase.from('ideas').upsert(ideaItemToRow(userId, item)).then();
+        }
+        callback(cached);
+      } else {
+        callback([]);
+      }
+    } catch (err) {
+      console.warn('Querying ideas fallback to local storage:', err);
+      callback(getStoredIdeas());
+    }
+  };
+
+  fetchIdeas();
+
+  // Supabase Realtime channel subscription
+  try {
+    const channel = supabase
+      .channel(`ideas_realtime_${userId}_${Math.random().toString(36).substring(2, 9)}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'ideas',
+          filter: `user_id=eq.${userId}`,
+        },
+        () => {
+          fetchIdeas();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  } catch {
+    return () => {};
+  }
+};
+
+export const saveIdeaToSupabase = async (userId: string, idea: IdeaItem) => {
+  // Always update local cache first for zero latency
+  saveLocalIdea(idea);
+
+  try {
+    const row = ideaItemToRow(userId, idea);
+    const { data, error } = await supabase
+      .from('ideas')
+      .upsert(row, { onConflict: 'id' });
+
+    if (error) {
+      console.warn('Supabase save note (saved to local cache):', error.message);
+    }
+    return data;
+  } catch (err) {
+    console.warn('Supabase save exception (persisted locally):', err);
+  }
+};
+
+export const deleteIdeaFromSupabase = async (userId: string, ideaId: string) => {
+  deleteLocalIdea(ideaId);
+
+  try {
+    const { error } = await supabase
+      .from('ideas')
+      .delete()
+      .eq('id', ideaId)
+      .eq('user_id', userId);
+
+    if (error) {
+      console.warn('Supabase delete notice:', error.message);
+    }
+  } catch (err) {
+    console.warn('Supabase delete exception:', err);
+  }
+};
+
+// Aliases for backwards compatibility
+export const saveIdeaToFirebase = saveIdeaToSupabase;
+export const deleteIdeaFromFirebase = deleteIdeaFromSupabase;
 
 export const REAL_USER_PROJECTS: IdeaItem[] = [];
 

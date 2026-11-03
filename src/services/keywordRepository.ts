@@ -27,15 +27,18 @@ export const saveKeywordsToSupabase = async (
     weight: Number(k.weight ?? 1.0),
   }));
 
-  const { data, error } = await supabase
-    .from('keywords')
-    .upsert(rows, { onConflict: 'id' });
+  try {
+    const { data, error } = await supabase
+      .from('keywords')
+      .upsert(rows, { onConflict: 'id' });
 
-  if (error) {
-    console.error('Error saving keywords to Supabase:', error);
-    throw error;
+    if (error) {
+      console.warn('Supabase keywords save notice:', error.message);
+    }
+    return data;
+  } catch (err) {
+    console.warn('Supabase keywords save exception:', err);
   }
-  return data;
 };
 
 export const saveKeywordsToFirebase = saveKeywordsToSupabase;

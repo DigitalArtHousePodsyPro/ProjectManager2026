@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Key, Shield, Download, Upload, RotateCcw, Save, Plus, Trash2, Check, AlertCircle, RefreshCw, Database, Globe } from 'lucide-react';
+import { X, Key, Shield, Download, Upload, RotateCcw, Save, Plus, Trash2, Check, AlertCircle, RefreshCw, Database, Globe, Copy } from 'lucide-react';
 import { User } from '@supabase/supabase-js';
 import { Settings, BackupItem, IdeaItem } from '../types';
 import { getSettings, saveSettings, getBackupHistory, createLocalBackupSnapshot, downloadJsonFile, exportAllDataAsJson, importDataFromJson } from '../services/backupService';
@@ -27,6 +27,63 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState(false);
+  const [copiedSql, setCopiedSql] = useState(false);
+
+  const handleCopySql = () => {
+    const sql = `-- OmniFocus Supabase Database Tables
+create table if not exists ideas (
+  id text primary key,
+  user_id text not null,
+  title text,
+  raw_input text,
+  domain text,
+  status text,
+  priority text,
+  tags text[],
+  action_plan jsonb,
+  grounded_research jsonb,
+  sub_ideas jsonb,
+  etsy_listing jsonb,
+  visual_concepts jsonb,
+  design_brief jsonb,
+  maturity_score integer,
+  is_favorite boolean default false,
+  parent_id text,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create table if not exists keywords (
+  id text primary key,
+  user_id text not null,
+  keyword text not null,
+  search_volume integer,
+  search_result integer,
+  conversion_rate numeric,
+  uploaded_at timestamptz default now(),
+  weight numeric default 1.0
+);
+
+create table if not exists pipeline_logs (
+  id text primary key,
+  idea_id text not null,
+  user_id text not null,
+  step text not null,
+  status text not null,
+  error text,
+  created_at timestamptz default now()
+);
+
+create table if not exists seasonal_automation_log (
+  id text primary key,
+  user_id text not null,
+  event_name text not null,
+  triggered_at timestamptz default now()
+);`;
+    navigator.clipboard.writeText(sql);
+    setCopiedSql(true);
+    setTimeout(() => setCopiedSql(false), 2000);
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -285,6 +342,44 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Section: Supabase Integration */}
+          <div className="bg-slate-950/60 rounded-xl p-4 border border-slate-800 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-emerald-400" />
+                <h3 className="text-sm font-semibold text-white">Supabase Veritabanı Durumu</h3>
+              </div>
+              <span className="text-[11px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-mono">
+                Doğrudan Erişim Aktif
+              </span>
+            </div>
+
+            <div className="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-2 text-xs">
+              <div className="flex items-center justify-between text-slate-300">
+                <span className="text-slate-400">Proje Adresi:</span>
+                <span className="font-mono text-emerald-400 font-medium">wwpmyscfemmvnncnvyur.supabase.co</span>
+              </div>
+              <div className="flex items-center justify-between text-slate-300">
+                <span className="text-slate-400">Çalışma Modu:</span>
+                <span className="text-slate-200">Kullanıcı Girişi Olmadan Doğrudan Çalışma</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-1">
+              <p className="text-[11px] text-slate-400 max-w-xs">
+                Yeni projede tablolar henüz açılmadıysa SQL kodunu kopyalayıp Supabase SQL Editor'de çalıştırabilirsiniz.
+              </p>
+              <button
+                type="button"
+                onClick={handleCopySql}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-medium transition-colors cursor-pointer shrink-0"
+              >
+                {copiedSql ? <Check className="w-3.5 h-3.5 text-white" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedSql ? 'Kopyalandı!' : 'SQL Kodunu Kopyala'}</span>
+              </button>
+            </div>
           </div>
 
           {/* Section 3: Google Drive Sync */}

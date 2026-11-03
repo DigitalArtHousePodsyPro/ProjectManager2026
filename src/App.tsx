@@ -15,6 +15,7 @@ import {
 } from './services/storage';
 import { 
   supabase, 
+  DEFAULT_USER,
   signInWithGoogle, 
   signInWithEmailPassword, 
   signUpWithEmail, 
@@ -37,20 +38,13 @@ import { SettingsModal } from './components/SettingsModal';
 import { InsightsPanel } from './components/InsightsPanel';
 import { TimelineView } from './components/TimelineView';
 import { ReminderBanner } from './components/ReminderBanner';
-import { LogIn, Sparkles, Mail, Key, LogOut, CheckCircle2, Zap } from 'lucide-react';
+import { Sparkles, CheckCircle2, Zap } from 'lucide-react';
 
 export default function App() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User>(DEFAULT_USER as unknown as User);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
   const [ideas, setIdeas] = useState<IdeaItem[]>([]);
   
-  // Email auth modal / mode states
-  const [authMode, setAuthMode] = useState<'google' | 'email'>('google');
-  const [emailInput, setEmailInput] = useState('');
-  const [passwordInput, setPasswordInput] = useState('');
-  const [authError, setAuthError] = useState<string | null>(null);
-  const [authSubmitting, setAuthSubmitting] = useState(false);
   const [pipelineProgress, setPipelineProgress] = useState<{ step: string; percent: number } | null>(null);
 
   // Persisted view states
@@ -81,29 +75,28 @@ export default function App() {
     localStorage.setItem('viewMode', viewMode);
   }, [activeDomain, activeStatusFilter, viewMode]);
 
-  // Supabase Auth & Session Subscription
+  // Supabase Auth & Session Detection
   useEffect(() => {
-    // 1. Initial Session Check
     supabase.auth.getSession().then(({ data: { session } }) => {
-      const u = session?.user ?? null;
-      setUser(u);
+      if (session?.user) {
+        setUser(session.user);
+      }
       if (session?.provider_token) {
         setAccessToken(session.provider_token);
       }
-      setAuthLoading(false);
     }).catch(err => {
-      console.warn('Supabase getSession error:', err);
-      setAuthLoading(false);
+      console.warn('Supabase getSession notice:', err);
     });
 
-    // 2. Realtime Auth State Change
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      const u = session?.user ?? null;
-      setUser(u);
+      if (session?.user) {
+        setUser(session.user);
+      } else {
+        setUser(DEFAULT_USER as unknown as User);
+      }
       if (session?.provider_token) {
         setAccessToken(session.provider_token);
       }
-      setAuthLoading(false);
     });
 
     return () => {
@@ -259,44 +252,10 @@ export default function App() {
     }, 0);
   }, [ideas]);
 
-  const handleGoogleLogin = async () => {
-    setAuthError(null);
-    try {
-      await signInWithGoogle();
-    } catch (err: any) {
-      console.error('Google login error:', err);
-      setAuthError(err.message || 'Google girişi başlatılamadı. E-posta ile giriş yöntemini de kullanabilirsiniz.');
-    }
-  };
-
-  const handleEmailAuth = async (isSignUp: boolean) => {
-    if (!emailInput.trim() || !passwordInput.trim()) {
-      setAuthError('Lütfen e-posta ve şifrenizi girin.');
-      return;
-    }
-    setAuthSubmitting(true);
-    setAuthError(null);
-    try {
-      if (isSignUp) {
-        const res = await signUpWithEmail(emailInput.trim(), passwordInput);
-        if (res.user) setUser(res.user);
-      } else {
-        const res = await signInWithEmailPassword(emailInput.trim(), passwordInput);
-        if (res.user) setUser(res.user);
-      }
-    } catch (err: any) {
-      console.error('Email auth error:', err);
-      setAuthError(err.message || 'Giriş yapılamadı.');
-    } finally {
-      setAuthSubmitting(false);
-    }
-  };
-
   const handleSignOut = async () => {
     await signOut();
-    setUser(null);
+    setUser(DEFAULT_USER as unknown as User);
     setAccessToken(null);
-    setIdeas([]);
   };
 
   const handleSaveNewIdea = async (data: {
@@ -408,131 +367,6 @@ export default function App() {
       setPipelineProgress(null);
     }
   };
-
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center space-y-4">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-amber-500 to-indigo-500 animate-spin flex items-center justify-center">
-          <span className="text-slate-950 font-black text-xl">Ω</span>
-        </div>
-        <p className="text-slate-400 font-medium animate-pulse">OmniFocus Supabase Bağlantısı Kuruluyor...</p>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl backdrop-blur-md space-y-6">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-400 via-amber-400 to-indigo-500 flex items-center justify-center text-slate-950 font-black text-3xl shadow-xl mx-auto">
-            Ω
-          </div>
-
-          <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-white tracking-tight">
-              OmniFocus <span className="text-emerald-400 font-normal">Idea OS</span>
-            </h1>
-            <p className="text-slate-400 text-xs leading-relaxed">
-              Supabase Veritabanı & Realtime ile Güçlendirilmiş Fikir ve Aksiyon Planlama Merkezi
-            </p>
-          </div>
-
-          {authError && (
-            <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 text-xs text-left">
-              {authError}
-            </div>
-          )}
-
-          {/* Login Options Tab */}
-          <div className="flex rounded-xl bg-slate-950 p-1 border border-slate-800 text-xs font-medium">
-            <button
-              onClick={() => { setAuthMode('google'); setAuthError(null); }}
-              className={`flex-1 py-2 rounded-lg transition-colors cursor-pointer ${authMode === 'google' ? 'bg-slate-800 text-white shadow' : 'text-slate-400 hover:text-white'}`}
-            >
-              Google OAuth
-            </button>
-            <button
-              onClick={() => { setAuthMode('email'); setAuthError(null); }}
-              className={`flex-1 py-2 rounded-lg transition-colors cursor-pointer ${authMode === 'email' ? 'bg-slate-800 text-white shadow' : 'text-slate-400 hover:text-white'}`}
-            >
-              E-posta ile Giriş
-            </button>
-          </div>
-
-          {authMode === 'google' ? (
-            <div className="space-y-4 pt-2">
-              <button 
-                onClick={handleGoogleLogin}
-                className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white hover:bg-slate-100 text-slate-900 font-bold rounded-xl transition-all active:scale-98 shadow-lg cursor-pointer"
-              >
-                <LogIn className="w-4 h-4 text-slate-900" />
-                <span>Google ile Giriş Yap</span>
-              </button>
-
-              <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-left text-[11px] text-emerald-300/90 leading-relaxed">
-                <span className="font-semibold block mb-1">⚡ Supabase Doğrudan Bağlantı</span>
-                Supabase Auth ve PostgreSQL RLS ile verileriniz tamamen size özel güvenli depolanır.
-              </div>
-            </div>
-          ) : (
-            <form onSubmit={(e) => { e.preventDefault(); handleEmailAuth(false); }} className="space-y-3 pt-2 text-left">
-              <div>
-                <label className="text-[11px] text-slate-400 font-medium block mb-1">E-Posta Adresi</label>
-                <div className="relative">
-                  <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                  <input
-                    type="email"
-                    value={emailInput}
-                    onChange={(e) => setEmailInput(e.target.value)}
-                    placeholder="ornek@alanadi.com"
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[11px] text-slate-400 font-medium block mb-1">Şifre</label>
-                <div className="relative">
-                  <Key className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                  <input
-                    type="password"
-                    value={passwordInput}
-                    onChange={(e) => setPasswordInput(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 pt-2">
-                <button
-                  type="submit"
-                  disabled={authSubmitting}
-                  className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-xs transition-colors cursor-pointer"
-                >
-                  {authSubmitting ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
-                </button>
-                <button
-                  type="button"
-                  disabled={authSubmitting}
-                  onClick={() => handleEmailAuth(true)}
-                  className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-xl text-xs border border-slate-700 transition-colors cursor-pointer"
-                >
-                  Yeni Hesap Aç
-                </button>
-              </div>
-            </form>
-          )}
-
-          <div className="text-slate-500 text-[11px] font-mono tracking-wider pt-2 border-t border-slate-800/80">
-            cmprmnfavqllgkfyoftu.supabase.co
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">

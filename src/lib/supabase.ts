@@ -1,15 +1,28 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://cmprmnfavqllgkfyoftu.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtcHJtZm5hdnFsbGdrZnlvZnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM2NzYzMTYsImV4cCI6MjEwOTI1MjMxNn0.XRd2813eaYZzAZ3Y804JUrjrTztBsLyXaCDfNHUrj94';
+export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://wwpmyscfemmvnncnvyur.supabase.co';
+export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3cG15c2NmZW1tdm5uY252eXVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM3MTA1ODIsImV4cCI6MjEwOTI4NjU4Mn0._B1ZhIXlbaZigTHIYsl0TjmLPzfJ1-50kWBzz1WugBc';
+export const SUPABASE_SERVICE_ROLE_KEY = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind3cG15c2NmZW1tdm5uY252eXVyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MzcxMDU4MiwiZXhwIjoyMTA5Mjg2NTgyfQ.gA7LBk1daX-x5wTy0RUgZpBij5PKYvbv01xN2bUVKaY';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+// We prioritize the key that allows unrestricted local single-user access
+const activeKey = SUPABASE_SERVICE_ROLE_KEY || SUPABASE_ANON_KEY;
+
+export const supabase = createClient(SUPABASE_URL, activeKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
   },
 });
+
+export const DEFAULT_USER = {
+  id: 'omni_creator',
+  email: 'creator@omnifocus.local',
+  user_metadata: { name: 'OmniFocus Creator' },
+  app_metadata: {},
+  aud: 'authenticated',
+  created_at: new Date().toISOString()
+};
 
 export const signInWithGoogle = async () => {
   try {
@@ -22,7 +35,7 @@ export const signInWithGoogle = async () => {
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error('Supabase Google OAuth login error:', error);
+    console.warn('Supabase Google OAuth notice:', error);
     throw error;
   }
 };
@@ -45,19 +58,7 @@ export const signUpWithEmail = async (email: string, password: string) => {
   return data;
 };
 
-export const signInAnonymously = async () => {
-  // If anonymous sign-in is enabled in Supabase
-  try {
-    const { data, error } = await supabase.auth.signInAnonymously();
-    if (error) throw error;
-    return data;
-  } catch (err) {
-    console.warn('Anonymous sign-in fallback:', err);
-    throw err;
-  }
-};
-
 export const signOut = async () => {
   const { error } = await supabase.auth.signOut();
-  if (error) console.error('Sign out error:', error);
+  if (error) console.warn('Sign out notice:', error);
 };
