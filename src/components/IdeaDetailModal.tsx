@@ -533,7 +533,9 @@ export const IdeaDetailModal: React.FC<IdeaDetailModalProps> = ({
               onChange={(e) => handleStatusChange(e.target.value as StatusType)}
               className="bg-slate-800 text-slate-200 text-xs px-2.5 py-1 rounded-md border border-slate-700 focus:outline-none focus:border-amber-400 cursor-pointer"
             >
-              <option value="in_progress">Üretimde / Kodlamada</option>
+              <option value="inbox">Gelen Kutusu (Fikir)</option>
+              <option value="research">Araştırma & Doğrulama</option>
+              <option value="in_progress">Üretimde / Geliştirme</option>
               <option value="completed">Tamamlandı / Canlıda</option>
             </select>
 

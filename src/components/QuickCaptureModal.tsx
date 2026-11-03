@@ -184,7 +184,7 @@ export const QuickCaptureModal: React.FC<QuickCaptureModalProps> = ({
           const res = await requestAudioTranscription(base64Data, audioBlob.type);
           if (res.transcript) {
             setRawText(prev => prev ? `${prev}\n${res.transcript}` : res.transcript);
-            if (res.suggestedDomain && ['etsy_pod', 'youtube_automation', 'ai_apps'].includes(res.suggestedDomain)) {
+            if (res.suggestedDomain && ['etsy_pod', 'youtube_automation', 'ai_apps', 'indonesia'].includes(res.suggestedDomain)) {
               setDomain(res.suggestedDomain);
             }
             if (res.quickTitle && !customTitle) {

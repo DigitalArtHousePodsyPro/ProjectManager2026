@@ -6,8 +6,13 @@ function getHeaders(): Record<string, string> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
-  if (settings.apiKeys && settings.apiKeys.length > 0) {
-    headers['x-gemini-api-keys'] = JSON.stringify(settings.apiKeys);
+  const envKey = (import.meta as any).env?.VITE_GEMINI_API_KEY;
+  const keys = [...(settings.apiKeys || [])];
+  if (envKey && !keys.includes(envKey)) {
+    keys.unshift(envKey);
+  }
+  if (keys.length > 0) {
+    headers['x-gemini-api-keys'] = JSON.stringify(keys);
   }
   return headers;
 }

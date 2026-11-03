@@ -295,6 +295,8 @@ export default function App() {
       }
     }
 
+    // Optimistically update React state immediately for instant UI feedback
+    setIdeas((prev) => [newIdea, ...prev.filter(i => i.id !== newIdea.id)]);
     await saveIdeaToSupabase(user.id, newIdea);
   };
 
@@ -303,11 +305,16 @@ export default function App() {
     const idea = ideas.find(i => i.id === id);
     if (!idea) return;
     
-    await saveIdeaToSupabase(user.id, {
+    const updated: IdeaItem = {
       ...idea,
       status: newStatus,
       updatedAt: new Date().toISOString()
-    });
+    };
+    setIdeas((prev) => prev.map((i) => i.id === id ? updated : i));
+    if (selectedIdea && selectedIdea.id === id) {
+      setSelectedIdea(updated);
+    }
+    await saveIdeaToSupabase(user.id, updated);
   };
 
   const handleToggleFavorite = async (id: string) => {
@@ -315,23 +322,30 @@ export default function App() {
     const idea = ideas.find(i => i.id === id);
     if (!idea) return;
 
-    await saveIdeaToSupabase(user.id, {
+    const updated: IdeaItem = {
       ...idea,
       isFavorite: !idea.isFavorite,
       updatedAt: new Date().toISOString()
-    });
+    };
+    setIdeas((prev) => prev.map((i) => i.id === id ? updated : i));
+    if (selectedIdea && selectedIdea.id === id) {
+      setSelectedIdea(updated);
+    }
+    await saveIdeaToSupabase(user.id, updated);
   };
 
   const handleDeleteIdea = async (id: string) => {
     if (!user) return;
-    await deleteIdeaFromSupabase(user.id, id);
+    setIdeas((prev) => prev.filter(i => i.id !== id));
     if (selectedIdea && selectedIdea.id === id) setSelectedIdea(null);
+    await deleteIdeaFromSupabase(user.id, id);
   };
 
   const handleUpdateIdea = async (updated: IdeaItem) => {
     if (!user) return;
-    await saveIdeaToSupabase(user.id, updated);
+    setIdeas((prev) => prev.map((i) => i.id === updated.id ? updated : i));
     if (selectedIdea && selectedIdea.id === updated.id) setSelectedIdea(updated);
+    await saveIdeaToSupabase(user.id, updated);
   };
 
   const handleGeneratePlanForIdea = async (idea: IdeaItem) => {
@@ -359,6 +373,7 @@ export default function App() {
       const updated = await runFullPipelineForIdea(user.id, idea, (step, percent) => {
         setPipelineProgress({ step, percent });
       });
+      setIdeas((prev) => prev.map((i) => i.id === updated.id ? updated : i));
       setSelectedIdea(updated);
       setTimeout(() => setPipelineProgress(null), 2500);
     } catch (err) {

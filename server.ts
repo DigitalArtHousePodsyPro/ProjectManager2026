@@ -10,6 +10,25 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+async function generateWithModelCascade(ai: GoogleGenAI, prompt: string | any, config?: any) {
+  const modelsToTry = ['gemini-3.8-flash', 'gemini-3.1-flash-lite', 'gemini-flash-latest'];
+  let lastError: any = null;
+
+  for (const model of modelsToTry) {
+    try {
+      return await ai.models.generateContent({
+        model,
+        contents: prompt,
+        config,
+      });
+    } catch (err: any) {
+      lastError = err;
+      console.warn(`Model ${model} request failed, trying next candidate:`, err?.message || err);
+    }
+  }
+  throw lastError;
+}
+
 async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
@@ -35,8 +54,8 @@ async function startServer() {
       keys = req.body.apiKeys.filter(Boolean);
     }
 
-    if ((!keys || keys.length === 0) && process.env.GEMINI_API_KEY) {
-      keys = [process.env.GEMINI_API_KEY];
+    if ((!keys || keys.length === 0) && (process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY)) {
+      keys = [process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || ''];
     }
 
     if (!keys || keys.length === 0) {
@@ -60,24 +79,7 @@ async function startServer() {
     return { ai, keyIndex: currentIndex };
   }
 
-  const PRIMARY_MODEL = 'gemini-3-flash-preview';
-
-  async function generateWithModel(ai: GoogleGenAI, prompt: string | any, config?: any) {
-    try {
-      return await ai.models.generateContent({
-        model: PRIMARY_MODEL,
-        contents: prompt,
-        config,
-      });
-    } catch (err: any) {
-      console.warn(`Primary model ${PRIMARY_MODEL} failed, trying fallback gemini-2.5-flash:`, err?.message || err);
-      return await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-        config,
-      });
-    }
-  }
+  const generateWithModel = generateWithModelCascade;
 
   // 1. Transform raw idea into actionable structured plan
   app.post('/api/ai/transform', async (req, res) => {
@@ -654,11 +656,7 @@ JSON Semasi:
   "analyzedAt": "${new Date().toISOString()}"
 }`;
 
-  const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
-    contents: prompt,
-    config: { responseMimeType: 'application/json' },
-  });
+  const response = await generateWithModelCascade(ai, prompt, { responseMimeType: 'application/json' });
 
   return JSON.parse(response.text || '{}');
 }
@@ -707,11 +705,7 @@ JSON Semasi:
   ]
 }`;
 
-  const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
-    contents: prompt,
-    config: { responseMimeType: 'application/json' },
-  });
+  const response = await generateWithModelCascade(ai, prompt, { responseMimeType: 'application/json' });
 
   const parsed = JSON.parse(response.text || '{}');
   return parsed.subIdeas || generateLocalFallbackSubIdeas(title, rawInput, domain);
@@ -793,11 +787,7 @@ JSON OUTPUT SCHEMA:
   "generatedAt": "${new Date().toISOString()}"
 }`;
 
-  const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
-    contents: prompt,
-    config: { responseMimeType: 'application/json' },
-  });
+  const response = await generateWithModelCascade(ai, prompt, { responseMimeType: 'application/json' });
 
   return JSON.parse(response.text || '{}');
 }
@@ -861,11 +851,7 @@ JSON OUTPUT SCHEMA:
   ]
 }`;
 
-  const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
-    contents: prompt,
-    config: { responseMimeType: 'application/json' },
-  });
+  const response = await generateWithModelCascade(ai, prompt, { responseMimeType: 'application/json' });
 
   const parsed = JSON.parse(response.text || '{}');
   return parsed.visualConcepts || generateLocalFallbackVisualConcepts(title, rawInput, domain);
@@ -936,11 +922,7 @@ JSON Semasi:
   "generatedAt": "${new Date().toISOString()}"
 }`;
 
-  const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
-    contents: prompt,
-    config: { responseMimeType: 'application/json' },
-  });
+  const response = await generateWithModelCascade(ai, prompt, { responseMimeType: 'application/json' });
 
   return JSON.parse(response.text || '{}');
 }
@@ -977,11 +959,7 @@ async function generateSeasonalIdeas(ai: GoogleGenAI | null, eventName: string, 
 
   const prompt = `Gorev: ABD Sezonluk Takvim etkinligi "${eventName}" (${eventDate}) icin 2 ay oncesinden uretim takvimi ve fikir uret.`;
 
-  const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
-    contents: prompt,
-    config: { responseMimeType: 'application/json' },
-  });
+  const response = await generateWithModelCascade(ai, prompt, { responseMimeType: 'application/json' });
 
   return JSON.parse(response.text || '{}');
 }

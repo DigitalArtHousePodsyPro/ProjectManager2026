@@ -1,7 +1,7 @@
 import { IdeaItem, DomainType, StatusType, MaturityScoreBreakdown } from '../types';
 import { supabase } from '../lib/supabase';
 
-const STORAGE_KEY = 'omnifocus_ideas_v3';
+const STORAGE_KEY = 'omnifocus_ideas_v4';
 
 export const calculateMaturityScore = (idea: IdeaItem): MaturityScoreBreakdown => {
   let score = 0;
@@ -27,7 +27,7 @@ export const calculateMaturityScore = (idea: IdeaItem): MaturityScoreBreakdown =
 };
 
 // -------------------------------------------------------------
-// 21 REAL SOLOPRENEUR PROJECTS (INITIAL SEED & RECOVERY)
+// 21 REAL SOLOPRENEUR PROJECTS (ALL AT RAW IDEA / INBOX STAGE)
 // -------------------------------------------------------------
 export const REAL_USER_PROJECTS: IdeaItem[] = [
   // --- 8 ETSY PRINT-ON-DEMAND PROJECTS ---
@@ -36,13 +36,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'Kişiselleştirilmiş Spotify Şarkı & Dalga Akrilik Plak',
     rawInput: 'Spotify şarkı kodu taranabilir, şeffaf pleksi akrilik cam üzerinde özel çift fotoğrafı ve ses dalgası.',
     domain: 'etsy_pod',
-    status: 'in_progress',
+    status: 'inbox',
     priority: 'high',
     tags: ['etsy pod', 'spotify plaque', 'custom gift', 'acrylic art', 'anniversary'],
     createdAt: '2026-10-15T09:00:00.000Z',
-    updatedAt: '2026-11-02T10:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: true,
-    maturityScore: 85,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Kişiye özel Spotify ses kodu ve fotoğraf baskılı şeffaf akrilik stand. Sevgililer ve yıldönümü hediyesi olarak yüksek dönüşümlü.',
       tags: ['spotify code', 'custom plaque', 'gift for couple', 'acrylic music print'],
@@ -55,8 +55,8 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         competitionInsight: 'Ahşap LED ışıklı taban ve hediye paketi seçeneği sunarak rakiplerden ayrışın.'
       },
       checklist: [
-        { id: 'c1', text: 'Spotify Developer API veya barkod şablonunu Canva içine aktar', done: true, tool: 'Canva', priority: 'high' },
-        { id: 'c2', text: 'Printify şeffaf akrilik stand mockuplarını hazırla', done: true, tool: 'Printify', priority: 'high' },
+        { id: 'c1', text: 'Spotify Developer API veya barkod şablonunu Canva içine aktar', done: false, tool: 'Canva', priority: 'high' },
+        { id: 'c2', text: 'Printify şeffaf akrilik stand mockuplarını hazırla', done: false, tool: 'Printify', priority: 'high' },
         { id: 'c3', text: '13 Etsy etiketini ve fiyatlandırma varyasyonlarını gir', done: false, tool: 'Etsy', priority: 'medium' }
       ],
       strategicNotes: 'Müşteriden şarkı linki ve fotoğrafı 12 saat içinde onaylatmak iadeleri sıfırlar.',
@@ -68,13 +68,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'Minimalist Vintage 911 / Otomobil Silüet Sanat Posteri',
     rawInput: 'Klasik Porsche 911 ve retro spor araba teknik çizim silüeti, minimalist Bauhaus tarzı müze mat posteri.',
     domain: 'etsy_pod',
-    status: 'research',
+    status: 'inbox',
     priority: 'high',
     tags: ['etsy pod', 'car poster', 'porsche 911', 'garage wall art', 'minimalist'],
     createdAt: '2026-10-18T11:00:00.000Z',
-    updatedAt: '2026-11-01T14:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: true,
-    maturityScore: 65,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Klasik araba meraklıları ve modern garaj/ofis dekorasyonu için yüksek çözünürlüklü vektör silüet poster serisi.',
       tags: ['car silhouette', 'vintage 911', 'garage decor', 'minimalist car print'],
@@ -87,7 +87,7 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         competitionInsight: 'Gövde kodları (930, 964, 993) serilerini 3lü set halinde sunarak sepet tutarını artırın.'
       },
       checklist: [
-        { id: 'c4', text: 'Vektör silüet çizimlerini Illustrator/Midjourney ile hazırla', done: true, tool: 'Midjourney', priority: 'high' },
+        { id: 'c4', text: 'Vektör silüet çizimlerini Illustrator/Midjourney ile hazırla', done: false, tool: 'Midjourney', priority: 'high' },
         { id: 'c5', text: 'Gerçekçi lüks daire ve garaj mockup koleksiyonunu oluştur', done: false, tool: 'Canva', priority: 'high' },
         { id: 'c6', text: 'Arama hacmi yüksek 13 etiketi keyword deposundan seç', done: false, tool: 'eRank', priority: 'medium' }
       ],
@@ -100,13 +100,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'Retro 90\'lar Film & Sinema Tipografi Posteri Serisi',
     rawInput: 'Pulp Fiction, Fight Club ve Matrix gibi 90lar kült filmleri için minimalist tipografik ve sinematik renk paletli posterler.',
     domain: 'etsy_pod',
-    status: 'in_progress',
+    status: 'inbox',
     priority: 'medium',
     tags: ['etsy pod', 'movie poster', 'vintage cinema', '90s aesthetic'],
     createdAt: '2026-10-20T14:00:00.000Z',
-    updatedAt: '2026-11-02T16:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: false,
-    maturityScore: 70,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Kült filmlerin ikonik diyalogları ve minimalist renk şeritleriyle tasarlanmış modern sinema odası poster koleksiyonu.',
       tags: ['retro movie print', 'cinema wall decor', 'minimalist film poster'],
@@ -116,7 +116,7 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         targetAudience: 'Sinefiller, üniversite öğrencileri ve retro dekorasyon sevenler'
       },
       checklist: [
-        { id: 'c7', text: 'Telif haklarına uygun fan-art & tipografi tasarımını netleştir', done: true, tool: 'Canva', priority: 'high' },
+        { id: 'c7', text: 'Telif haklarına uygun fan-art & tipografi tasarımını netleştir', done: false, tool: 'Canva', priority: 'high' },
         { id: 'c8', text: 'Ev sineması ortamında sergilenen mockuplar hazırla', done: false, tool: 'Printify', priority: 'medium' }
       ],
       generatedAt: '2026-10-20T14:30:00.000Z'
@@ -127,13 +127,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'Estetik Albüm Kapağı & Şarkı Sözü Duvar Sanatı Baskısı',
     rawInput: 'Popüler müzik albümlerinin renk paleti analizi, süre listesi ve favori şarkı sözüyle hazırlanan estetik galeri duvarı baskısı.',
     domain: 'etsy_pod',
-    status: 'completed',
+    status: 'inbox',
     priority: 'medium',
     tags: ['etsy pod', 'album cover poster', 'music wall art', 'room aesthetic'],
     createdAt: '2026-10-12T08:00:00.000Z',
-    updatedAt: '2026-11-02T18:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: false,
-    maturityScore: 100,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Genç odaları ve modern çalışma alanları için Pinterest estetiğinde albüm kapağı konsept posterleri.',
       tags: ['album receipt print', 'custom music poster', 'bedroom wall decor'],
@@ -142,8 +142,8 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         productType: 'A3 & A2 Boyutunda Dijital İndirme ve Fiziki Poster'
       },
       checklist: [
-        { id: 'c9', text: '10 popüler albüm şablonunu tamamla', done: true, tool: 'Canva', priority: 'high' },
-        { id: 'c10', text: 'Etsy mağazasında dijital download olarak yayına al', done: true, tool: 'Etsy', priority: 'high' }
+        { id: 'c9', text: '10 popüler albüm şablonunu tamamla', done: false, tool: 'Canva', priority: 'high' },
+        { id: 'c10', text: 'Etsy mağazasında dijital download olarak yayına al', done: false, tool: 'Etsy', priority: 'high' }
       ],
       generatedAt: '2026-10-12T08:30:00.000Z'
     }
@@ -157,9 +157,9 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     priority: 'high',
     tags: ['etsy pod', '2026 calendar', 'desk planner', 'printable calendar'],
     createdAt: '2026-10-25T10:00:00.000Z',
-    updatedAt: '2026-11-02T09:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: true,
-    maturityScore: 35,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Yılbaşı hediyelikleri ve yeni yıl planlaması için 12 aylık minimalist botanik takvim projesi.',
       tags: ['2026 printable calendar', 'botanical desk calendar', 'new year gift'],
@@ -179,13 +179,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'Özel Yıldız Haritası & Evlilik / Doğum Koordinat Tablosu',
     rawInput: 'Seçilen tarih, saat ve şehirdeki gerçek gökyüzü yıldız haritası. Altında özel not ve GPS koordinatları.',
     domain: 'etsy_pod',
-    status: 'completed',
+    status: 'inbox',
     priority: 'high',
     tags: ['etsy pod', 'star map', 'custom constellation', 'wedding gift'],
     createdAt: '2026-10-10T12:00:00.000Z',
-    updatedAt: '2026-11-02T19:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: true,
-    maturityScore: 100,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Düğün, ilk buluşma veya doğum anını ölümsüzleştiren kişiselleştirilmiş yıldız haritası.',
       tags: ['custom star map', 'the night we met', 'coordinates art print'],
@@ -194,8 +194,8 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         productType: 'Çerçeveli Ahşap Poster ve Kanvas'
       },
       checklist: [
-        { id: 'c13', text: 'Otomatik yıldız haritası jeneratör şablonunu oluştur', done: true, tool: 'Canva', priority: 'high' },
-        { id: 'c14', text: 'Etsy listelemesini ve 13 etiketi yayına al', done: true, tool: 'Etsy', priority: 'high' }
+        { id: 'c13', text: 'Otomatik yıldız haritası jeneratör şablonunu oluştur', done: false, tool: 'Canva', priority: 'high' },
+        { id: 'c14', text: 'Etsy listelemesini ve 13 etiketi yayına al', done: false, tool: 'Etsy', priority: 'high' }
       ],
       generatedAt: '2026-10-10T12:30:00.000Z'
     }
@@ -205,13 +205,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'Soyut Boho Galeri Duvarı 3\'lü Duvar Kağıdı & Baskı Seti',
     rawInput: 'Terracotta, bej ve adaçayı yeşili tonlarında 3 adet birbirini tamamlayan soyut kemer ve güneş motifi.',
     domain: 'etsy_pod',
-    status: 'research',
+    status: 'inbox',
     priority: 'low',
     tags: ['etsy pod', 'boho art print', 'gallery wall set', 'set of 3 prints'],
     createdAt: '2026-10-22T15:00:00.000Z',
-    updatedAt: '2026-11-01T12:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: false,
-    maturityScore: 50,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Oturma odası kanepesi arkası için uyumlu 3 parçalı galeri duvar sanatı seti.',
       tags: ['boho wall decor', 'neutral abstract prints', 'terracotta wall art'],
@@ -234,9 +234,9 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     priority: 'medium',
     tags: ['etsy pod', 'japanese art', 'ukiyo-e modern', 'fuji mountain art'],
     createdAt: '2026-10-28T09:00:00.000Z',
-    updatedAt: '2026-11-02T08:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: false,
-    maturityScore: 30,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Japon estetiği (Japandi) ve sakinleştirici doğa manzaralı kanvas tablo serisi.',
       tags: ['japandi wall art', 'japanese woodblock print', 'zen room decor'],
@@ -257,13 +257,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'İtiraf Saati: "20 Yıldır Kimseye Anlatmadığım Sır" (Gerçek Hikayeler)',
     rawInput: 'Kişilerin anonim gönderdiği gerçek itiraf mektupları. ElevenLabs derin ve samimi ses tonu, arka planda yağmurlu araba sürüşü veya lo-fi animasyon.',
     domain: 'youtube_automation',
-    status: 'in_progress',
+    status: 'inbox',
     priority: 'high',
     tags: ['youtube automation', 'itiraf hikayeleri', 'elevenlabs', 'faceless', 'viral retention'],
     createdAt: '2026-10-14T10:00:00.000Z',
-    updatedAt: '2026-11-02T11:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: true,
-    maturityScore: 80,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Yüksek izlenme tutunması sağlayan anonim itiraf videoları. Merak uyandıran ilk 30 saniye ve duygusal doruk noktası.',
       tags: ['itiraf saatleri', 'gercek hikaye', 'sesli itiraflar', 'faceless video'],
@@ -282,8 +282,8 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         thumbnailConcept: 'Eski yıpranmış bir mektup, buğulu cam ve üzerinde sarı renkle "SON İTİRAF"'
       },
       checklist: [
-        { id: 'c17', text: 'Reddit r/confession hikayesini Türkçe adapte et', done: true, tool: 'Cursor', priority: 'high' },
-        { id: 'c18', text: 'ElevenLabs seslendirmesini al ve nefes boşluklarını kırp', done: true, tool: 'ElevenLabs', priority: 'high' },
+        { id: 'c17', text: 'Reddit r/confession hikayesini Türkçe adapte et', done: false, tool: 'Cursor', priority: 'high' },
+        { id: 'c18', text: 'ElevenLabs seslendirmesini al ve nefes boşluklarını kırp', done: false, tool: 'ElevenLabs', priority: 'high' },
         { id: 'c19', text: 'CapCut ile altyazı ve sinematik b-roll montajla', done: false, tool: 'CapCut', priority: 'high' }
       ],
       strategicNotes: 'İlk 45 saniyede izleyici retention oranını %65 üzerinde tutmak YouTube önerilenler sekmesine sokar.',
@@ -299,9 +299,9 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     priority: 'medium',
     tags: ['youtube automation', 'utanc hikayeleri', 'komik anlar', 'cringe stories'],
     createdAt: '2026-10-21T13:00:00.000Z',
-    updatedAt: '2026-11-01T15:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: false,
-    maturityScore: 40,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Eğlenceli ve viral potansiyeli yüksek utanç verici hikaye derlemesi. Shorts ve uzun video uyumlu.',
       tags: ['cringe anlar', 'en buyuk rezillik', 'rezil hikayeler'],
@@ -319,13 +319,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'İnteraktif Sorgu Odası: "Katili Sen Bul!" Bölüm 1 - Kapalı Oda Vakası',
     rawInput: 'İzleyicinin dedektif olduğu polisiye sorgu dizisi. 3 şüpheli sorgulanıyor, izleyiciye çelişkileri bulması için 10 saniye süre veriliyor.',
     domain: 'youtube_automation',
-    status: 'in_progress',
+    status: 'inbox',
     priority: 'high',
     tags: ['youtube automation', 'sorgu odasi', 'interaktif polisiye', 'cinayet dosyasi'],
     createdAt: '2026-10-16T16:00:00.000Z',
-    updatedAt: '2026-11-02T12:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: true,
-    maturityScore: 85,
+    maturityScore: 20,
     actionPlan: {
       summary: 'İzleyiciyi yorum yapmaya ve ekranda kalmaya teşvik eden yüksek etkileşimli polisiye sorgu formatı.',
       tags: ['sorgu odasi', 'polisiye dizi', 'katil kim', 'interaktif video'],
@@ -341,8 +341,8 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         }
       },
       checklist: [
-        { id: 'c21', text: '3 şüphelinin çelişkili ifadelerini senaryolaştır', done: true, tool: 'Cursor', priority: 'high' },
-        { id: 'c22', text: '10 saniyelik geri sayım ses ve görsel efektini hazırla', done: true, tool: 'CapCut', priority: 'high' },
+        { id: 'c21', text: '3 şüphelinin çelişkili ifadelerini senaryolaştır', done: false, tool: 'Cursor', priority: 'high' },
+        { id: 'c22', text: '10 saniyelik geri sayım ses ve görsel efektini hazırla', done: false, tool: 'CapCut', priority: 'high' },
         { id: 'c23', text: 'Kapakta şüphelinin yüzü ve kırmızı büyüteç kullan', done: false, tool: 'Canva', priority: 'medium' }
       ],
       strategicNotes: 'Yorumlarda "Cevabı bulanlar yoruma yazsın" çağrısı algoritmayı tetikler.',
@@ -354,13 +354,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'Polisiye Dosyalar: 48 Saatte Çözülen İnanılmaz Şüpheli İtirafları',
     rawInput: 'Gerçek polis kayıtları ve sorgu psikolojisi. Dedektiflerin zanlıyı itirafa zorladığı kilit taktikler.',
     domain: 'youtube_automation',
-    status: 'research',
+    status: 'inbox',
     priority: 'medium',
     tags: ['youtube automation', 'gercek polisiye', 'sorgu taktikleri', 'belgesel'],
     createdAt: '2026-10-23T11:00:00.000Z',
-    updatedAt: '2026-11-01T17:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: false,
-    maturityScore: 60,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Kriminoloji ve sorgu psikolojisi odaklı mini belgesel video projesi.',
       tags: ['sorgu psikolojisi', 'reid teknigi', 'gercek polisiye'],
@@ -368,7 +368,7 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         titleIdeas: ['Polisler Yalanı Nasıl Anlar? En Ünlü Sorgu Taktikleri']
       },
       checklist: [
-        { id: 'c24', text: 'FBI ve polis sorgu dökümlerinden 3 gerçek örnek bul', done: true, tool: 'Google', priority: 'medium' }
+        { id: 'c24', text: 'FBI ve polis sorgu dökümlerinden 3 gerçek örnek bul', done: false, tool: 'Google', priority: 'medium' }
       ],
       generatedAt: '2026-10-23T11:30:00.000Z'
     }
@@ -382,9 +382,9 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     priority: 'high',
     tags: ['youtube automation', 'korku itiraf', 'gizemli sesler', 'gece videolari'],
     createdAt: '2026-10-27T18:00:00.000Z',
-    updatedAt: '2026-11-02T09:30:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: false,
-    maturityScore: 35,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Gece saatlerinde izlenmeye uygun, tüyler ürpertici gizem ve itiraf kurgusu.',
       tags: ['korku hikayeleri', 'gizemli itiraflar', 'karanlik video'],
@@ -402,13 +402,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'İnteraktif Sorgu Odası: Şüpheli Beden Dili & Yalan Analizi Dizi Serisi',
     rawInput: 'Beden dili uzmanlarının göz kırpma, mikro mimik ve ses titremesinden yalanı yakalama rehberi.',
     domain: 'youtube_automation',
-    status: 'research',
+    status: 'inbox',
     priority: 'high',
     tags: ['youtube automation', 'beden dili', 'yalan analizi', 'sorgu'],
     createdAt: '2026-10-24T14:00:00.000Z',
-    updatedAt: '2026-11-02T13:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: true,
-    maturityScore: 65,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Kullanıcının kendi günlük hayatında da uygulayabileceği mikro mimik analizleri.',
       tags: ['mikro mimikler', 'beden dili rehberi', 'yalan testi'],
@@ -426,13 +426,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'Hatalar ve Pişmanlıklar: Hayatını Mahveden Tek Bir Karar',
     rawInput: 'Tek bir yanlış karar yüzünden servetini veya ailesini kaybeden insanların dramatik ders hikayeleri.',
     domain: 'youtube_automation',
-    status: 'completed',
+    status: 'inbox',
     priority: 'medium',
     tags: ['youtube automation', 'hayat dersleri', 'pismanlik hikayesi', 'felsefi video'],
     createdAt: '2026-10-11T15:00:00.000Z',
-    updatedAt: '2026-11-02T17:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: false,
-    maturityScore: 100,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Dramatik ve ibretlik hikaye kurgusu ile yüksek izlenme süresi yakalayan format.',
       tags: ['hayat hatalari', 'dramatik hikaye', 'motivasyon'],
@@ -440,7 +440,7 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         titleIdeas: ['Hayatının En Büyük Hatasını 3 Saniyede Yaptı']
       },
       checklist: [
-        { id: 'c27', text: 'Script ve kurgu tamamlandı, yayına alındı', done: true, tool: 'YouTube', priority: 'high' }
+        { id: 'c27', text: 'Script ve kurgu taslağını oluştur', done: false, tool: 'YouTube', priority: 'high' }
       ],
       generatedAt: '2026-10-11T15:30:00.000Z'
     }
@@ -452,13 +452,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'Sejarah Indonesia Bergambar untuk Anak (Nusantara Tarihi Çocuk Kitabı)',
     rawInput: 'Endonezya adalarının kuruluş efsaneleri, Majapahit ve Sriwijaya krallıklarının çocuklara yönelik renkli resimli hikaye kitabı.',
     domain: 'indonesia',
-    status: 'in_progress',
+    status: 'inbox',
     priority: 'high',
     tags: ['indonesia', 'buku anak', 'amazon kdp', 'sejarah indonesia', 'shopee id'],
     createdAt: '2026-10-19T10:00:00.000Z',
-    updatedAt: '2026-11-02T15:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: true,
-    maturityScore: 85,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Endonezyalı ebeveynler için milli kültür ve tarih bilincini masallarla aşılayan Amazon KDP resimli çocuk kitabı.',
       tags: ['buku bergambar', 'sejarah nusantara', 'kdp indonesia', 'edukasi anak'],
@@ -471,8 +471,8 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         competitionInsight: 'Shopee ve Tokopedia üzerinde yerel fiyat (Rp 65.000 - Rp 95.000) ile doğrudan dijital download sunun.'
       },
       checklist: [
-        { id: 'c28', text: 'Midjourney v6 ile 16 adet Endonezya ada illüstrasyonu üret', done: true, tool: 'Midjourney', priority: 'high' },
-        { id: 'c29', text: 'Bahasa Indonesia basit metinleri yerel redaktör formatında kontrol et', done: true, tool: 'Cursor', priority: 'high' },
+        { id: 'c28', text: 'Midjourney v6 ile 16 adet Endonezya ada illüstrasyonu üret', done: false, tool: 'Midjourney', priority: 'high' },
+        { id: 'c29', text: 'Bahasa Indonesia basit metinleri yerel redaktör formatında kontrol et', done: false, tool: 'Cursor', priority: 'high' },
         { id: 'c30', text: 'KDP formatında PDF bleed ve kapak dosyasını derle', done: false, tool: 'Canva', priority: 'high' }
       ],
       strategicNotes: 'Endonezya 280 milyonluk nüfusuyla Güneydoğu Asya’nın en hızlı büyüyen çocuk yayıncılığı pazarıdır.',
@@ -484,13 +484,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'Cerita Rakyat Nusantara: 10 Adanın Efsanevi Masalları (Shopee/Tokopedia)',
     rawInput: 'Malin Kundang, Danau Toba, Roro Jonggrang gibi 10 popüler ada efsanesinin modern pedagojik anlatımı.',
     domain: 'indonesia',
-    status: 'research',
+    status: 'inbox',
     priority: 'medium',
     tags: ['indonesia', 'cerita rakyat', 'danau toba', 'tokopedia digital'],
     createdAt: '2026-10-26T12:00:00.000Z',
-    updatedAt: '2026-11-01T16:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: false,
-    maturityScore: 55,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Tokopedia ve Shopee dijital ürün mağazalarında satılacak sesli masal ve interaktif PDF paketi.',
       tags: ['dongeng nusantara', 'malin kundang', 'buku dongeng digital'],
@@ -498,7 +498,7 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         niche: 'Dijital Çocuk Masalları & Sesli Kitap'
       },
       checklist: [
-        { id: 'c31', text: '10 halk masalının özetlerini çıkar', done: true, tool: 'Cursor', priority: 'medium' }
+        { id: 'c31', text: '10 halk masalının özetlerini çıkar', done: false, tool: 'Cursor', priority: 'medium' }
       ],
       generatedAt: '2026-10-26T12:30:00.000Z'
     }
@@ -512,9 +512,9 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     priority: 'low',
     tags: ['indonesia', 'buku mewarnai', 'coloring book kdp', 'satwa nusantara'],
     createdAt: '2026-10-29T14:00:00.000Z',
-    updatedAt: '2026-11-02T07:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: false,
-    maturityScore: 30,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Düşük üretim maliyetli, siyah beyaz iç sayfalı KDP boyama ve etkinlik kitabı.',
       tags: ['buku aktivitas anak', 'satwa langka indonesia', 'kdp activity book'],
@@ -534,24 +534,24 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'OmniFocus Quick-Capture: Sesli Notu Aksiyon Planına Çeviren Micro-SaaS',
     rawInput: 'Kullanıcının tek tuşla sesli düşüncelerini kaydedip 10 saniyede yapılandırılmış Kanban görevlerine dönüştüren web aracı.',
     domain: 'ai_apps',
-    status: 'in_progress',
+    status: 'inbox',
     priority: 'high',
     tags: ['ai apps', 'micro saas', 'gemini api', 'audio to action', 'productivity'],
     createdAt: '2026-10-13T09:00:00.000Z',
-    updatedAt: '2026-11-02T16:30:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: true,
-    maturityScore: 90,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Solopreneur ve içerik üreticileri için ses kaydını yapılandırılmış JSON çıktısıyla planlayan üretkenlik aracı.',
-      tags: ['ai productivity', 'voice capture', 'micro saas', 'gemini 3 flash'],
+      tags: ['ai productivity', 'voice capture', 'micro saas', 'gemini 3.8 flash'],
       domainSpecifics: {
         problemStatement: 'Yaratıcı insanların fikirleri akıllarına geldikleri anda kaydedilmezse kayboluyor; not defterleri ise aksiyonsuz çöplüğe dönüyor.',
-        coreSolution: 'Web Audio API + Gemini Flash modeliyle sesi anında metne döküp sektöre özel aksiyon planına dönüştüren tek pencereli dashboard.',
+        coreSolution: 'Web Audio API + Gemini 3.8 Flash modeliyle sesi anında metne döküp sektöre özel aksiyon planına dönüştüren tek pencereli dashboard.',
         targetPersona: 'Etsy satıcıları, YouTube kanal sahipleri, bağımsız yazılımcılar (Solopreneurs)',
         techStack: {
           frontend: 'React 19 + Vite + Tailwind CSS v4',
           backend: 'Express Node.js proxy',
-          aiEngine: 'Google Gemini 3 Flash Preview & 3.8 Flash',
+          aiEngine: 'Google Gemini 3.8 Flash',
           database: 'Supabase PostgreSQL + Local Storage Fallback'
         },
         mvpFeatures: [
@@ -562,8 +562,8 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         monetizationIdea: 'Aylık $9 Pro plan (Sınırsız Gemini API analizi ve pazar araştırması).'
       },
       checklist: [
-        { id: 'c33', text: 'Supabase PostgreSQL şemasını ve RLS kurallarını doğrula', done: true, tool: 'Supabase', priority: 'high' },
-        { id: 'c34', text: 'Ses kaydı ve Gemini transkripsiyon hattını test et', done: true, tool: 'Cursor', priority: 'high' },
+        { id: 'c33', text: 'Supabase PostgreSQL şemasını ve RLS kurallarını doğrula', done: false, tool: 'Supabase', priority: 'high' },
+        { id: 'c34', text: 'Ses kaydı ve Gemini transkripsiyon hattını test et', done: false, tool: 'Cursor', priority: 'high' },
         { id: 'c35', text: 'Landing page ve ProductHunt lansman metnini hazırla', done: false, tool: 'Figma', priority: 'medium' }
       ],
       strategicNotes: 'Karmaşık ayarlar yerine ilk 5 saniyede çalışan sade akış kullanıcıyı tutundurur.',
@@ -575,13 +575,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'Etsy Auto-Listing SEO & 20 Görsel Prompt Üretici AI Motoru',
     rawInput: 'Etsy satıcıları için ürün başlığını, 13 etiketini ve Midjourney için 20 slotluk görsel prompt setini tek tıkla üreten yapay zeka aracı.',
     domain: 'ai_apps',
-    status: 'research',
+    status: 'inbox',
     priority: 'high',
     tags: ['ai apps', 'etsy seo tool', 'midjourney prompts', 'listing generator'],
     createdAt: '2026-10-17T14:00:00.000Z',
-    updatedAt: '2026-11-02T14:00:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: true,
-    maturityScore: 75,
+    maturityScore: 20,
     actionPlan: {
       summary: 'Etsy POD satıcılarının ürün başına 1 saatlik listeleme ve mockup hazırlık süresini 2 dakikaya indiren otomasyon.',
       tags: ['etsy automation', 'midjourney prompt generator', 'pod tools'],
@@ -590,12 +590,12 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         coreSolution: 'Tek bir ürün fikrinden 20 adet Midjourney promptu, infografik şablonu ve SEO uyumlu açıklama metni üreten motor.',
         techStack: {
           frontend: 'React + Tailwind',
-          aiEngine: 'Gemini 3 Flash Structured JSON'
+          aiEngine: 'Gemini 3.8 Flash Structured JSON'
         }
       },
       checklist: [
-        { id: 'c36', text: 'Etsy SEO kurallarına uygun 140 karakter ve 13 etiket promptunu optimize et', done: true, tool: 'Cursor', priority: 'high' },
-        { id: 'c37', text: 'Midjourney v6 için 20 slotluk prompt şablonlarını test et', done: true, tool: 'Midjourney', priority: 'high' }
+        { id: 'c36', text: 'Etsy SEO kurallarına uygun 140 karakter ve 13 etiket promptunu optimize et', done: false, tool: 'Cursor', priority: 'high' },
+        { id: 'c37', text: 'Midjourney v6 için 20 slotluk prompt şablonlarını test et', done: false, tool: 'Midjourney', priority: 'high' }
       ],
       generatedAt: '2026-10-17T14:30:00.000Z'
     }
@@ -605,13 +605,13 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
     title: 'Faceless YouTube Script & Storyboard Otomasyon Aracı (Gemini API)',
     rawInput: 'Viral YouTube konuları için ilk 30 saniye kancası, 5 adımlı script omurgası ve CapCut için B-roll yönergeleri oluşturan web aracı.',
     domain: 'ai_apps',
-    status: 'completed',
+    status: 'inbox',
     priority: 'high',
     tags: ['ai apps', 'youtube scriptwriter', 'faceless automation', 'storyboard ai'],
     createdAt: '2026-10-11T12:00:00.000Z',
-    updatedAt: '2026-11-02T17:30:00.000Z',
+    updatedAt: '2026-11-03T10:00:00.000Z',
     isFavorite: false,
-    maturityScore: 100,
+    maturityScore: 20,
     actionPlan: {
       summary: 'YouTube otomasyon kanallarının senaryo yazım ve storyboard hazırlık sürecini uçtan uca otomatikleştiren araç.',
       tags: ['youtube ai tool', 'script outline generator', 'b-roll prompt ai'],
@@ -620,8 +620,8 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
         coreSolution: 'Tıkla-ve-üret senaryo omurgası ve ElevenLabs zamanlamalı sahne dökümü.'
       },
       checklist: [
-        { id: 'c38', text: 'Kanca ve sahne akış algoritmasını tamamla', done: true, tool: 'Cursor', priority: 'high' },
-        { id: 'c39', text: 'Canlı sisteme dahil edildi', done: true, tool: 'Gemini API', priority: 'high' }
+        { id: 'c38', text: 'Kanca ve sahne akış algoritmasını tamamla', done: false, tool: 'Cursor', priority: 'high' },
+        { id: 'c39', text: 'Canlı sisteme dahil edildi', done: false, tool: 'Gemini API', priority: 'high' }
       ],
       generatedAt: '2026-10-11T12:30:00.000Z'
     }
@@ -632,6 +632,11 @@ export const REAL_USER_PROJECTS: IdeaItem[] = [
 // LOCAL STORAGE CACHE HELPERS
 // -------------------------------------------------------------
 export const getStoredIdeas = (): IdeaItem[] => {
+  try {
+    localStorage.removeItem('omnifocus_ideas_v3');
+    localStorage.removeItem('omnifocus_ideas_v2');
+  } catch {}
+
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw) {
     try {
