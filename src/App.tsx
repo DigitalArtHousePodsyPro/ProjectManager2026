@@ -11,7 +11,7 @@ import {
   saveIdeaToSupabase, 
   deleteIdeaFromSupabase, 
   getStoredIdeas, 
-  clearLocalStorage 
+  resetToRealProjects 
 } from './services/storage';
 import { 
   supabase, 
@@ -116,7 +116,7 @@ export default function App() {
       setIdeas(newIdeas);
     });
 
-    // Migration Check: If there are legacy ideas in localStorage, move them to Supabase
+    // Sync cached ideas to Supabase in background without clearing local storage
     const localIdeas = getStoredIdeas();
     if (localIdeas.length > 0) {
       (async () => {
@@ -124,10 +124,9 @@ export default function App() {
           try {
             await saveIdeaToSupabase(user.id, idea);
           } catch (e) {
-            console.error('Migration error for idea:', idea.id, e);
+            console.error('Sync error for idea:', idea.id, e);
           }
         }
-        clearLocalStorage();
       })();
     }
 
@@ -414,7 +413,10 @@ export default function App() {
           viewMode={viewMode}
           onSelectViewMode={setViewMode}
           counts={counts}
-          onResetToRealProjects={() => {}}
+          onResetToRealProjects={async () => {
+            const restored = await resetToRealProjects(user?.id || 'omni_creator');
+            setIdeas(restored);
+          }}
         />
 
         <main className="flex-1 overflow-y-auto p-6 lg:p-8 max-w-7xl mx-auto w-full">
