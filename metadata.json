@@ -1,0 +1,10 @@
+{
+  "name": "Remix OmniFocus Idea OS",
+  "description": "Etsy Print-on-Demand, YouTube Video Otomasyonu ve AI Uygulama gelistiricileri icin sesli ve metinle hizli fikir yakalama ve yapay zeka destekli aksiyon planlama merkezi.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
